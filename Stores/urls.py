@@ -19,6 +19,6 @@ from . import views
 
 urlpatterns = [
     path('',views.StoreList.as_view(), name='storelist'),
-    path('<int:pk>/',views.StoreDetail.as_view(), name='storedetails'),
+    path('<int:pk>/',views.StoreDetail.as_view(), name='store-detail'),
     path('<int:pk>/productlist/',views.StoreWiseProductList.as_view(), name='store_productlist'),
 ]

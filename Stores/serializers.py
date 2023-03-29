@@ -3,7 +3,7 @@ from Stores.models import Store, LANGUAGE_CHOICES, STYLE_CHOICES, Product
 
 
 class StoreSerializer(serializers.ModelSerializer):
-    products = serializers.PrimaryKeyRelatedField(many=True, read_only = True)
+    products = serializers.PrimaryKeyRelatedField(many=True, read_only = True)#removed queryset=Product.objects.all()
     class Meta:
         model = Store
         fields = ['id', 'name', 'category' , 'address', 'contact','products']

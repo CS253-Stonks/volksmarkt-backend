@@ -10,15 +10,7 @@ STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 # Create your models here.
 
     
-# class Order(models.Model):
-#     store = models.ForeignKey(Store, on_delete=models.CASCADE)
-#     refcode = models.CharField(max_length=20)
-#     deliveryaddress = models.TextField()
-    
-# class OrderItem(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-#     quantity = models.PositiveIntegerField(default=1)
+
     
 
 
