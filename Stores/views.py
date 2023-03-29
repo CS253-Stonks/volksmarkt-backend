@@ -18,7 +18,7 @@ class StoreDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
 
-class ProductList(APIView):
+class StoreWiseProductList(APIView):
     def get_object(self, pk):
         try:
             return Store.objects.get(pk=pk)

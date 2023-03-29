@@ -18,7 +18,6 @@ from django.urls import path,include
 from . import views
 
 urlpatterns = [
-    path('',views.StoreList.as_view(), name='storelist'),
-    path('<int:pk>/',views.StoreDetail.as_view(), name='storedetails'),
-    path('<int:pk>/productlist/',views.StoreWiseProductList.as_view(), name='store_productlist'),
+    path('',views.ProductList.as_view(), name='productlist'),
+    path('<int:pk>/',views.ProductDetail.as_view(), name='productdetails'),
 ]
