@@ -7,4 +7,8 @@ class User(AbstractUser):
     
 class Buyer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    email_id = models.CharField(max_length=50)   
+    address = models.CharField(max_length=50)   
+
+class Seller(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    
