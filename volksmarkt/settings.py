@@ -41,10 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djoser',
+<<<<<<< Updated upstream
+=======
+    # 'djoser',
+>>>>>>> Stashed changes
     'accounts',
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders'
+    # 'corsheaders'
 ]
 
 MIDDLEWARE = [

@@ -36,3 +36,12 @@ class StoreWiseProductList(APIView):
     #         serializer.save()
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProductList(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
