@@ -1,11 +1,5 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
-from pygments.lexers import get_all_lexers
-from pygments.styles import get_all_styles
-
-LEXERS = [item for item in get_all_lexers() if item[1]]
-LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
-STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 Categories = [('Electronics' , 'Electronics'),
               ('Medical' , 'Medical'),
@@ -43,6 +37,6 @@ class Product(models.Model):
     price = models.PositiveIntegerField()    
     store = models.ForeignKey(Store , related_name="products" , on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1) 
-    
+    image = models.ImageField(upload_to='media/images', default='media/images/default.jpg')
     def __str__(self):
         return self.name

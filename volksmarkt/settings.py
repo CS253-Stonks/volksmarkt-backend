@@ -43,7 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'rest_framework_simplejwt.token_blacklist',
+<<<<<<< HEAD
     # 'corsheaders'
+=======
+    'corsheaders',
+>>>>>>> 6a8ad735be0322c7d8845d8df4982fbfa396c0ed
 ]
 
 MIDDLEWARE = [
@@ -142,3 +146,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')
+MEDIA_URL = '/media/'

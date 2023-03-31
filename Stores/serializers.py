@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Stores.models import Store, LANGUAGE_CHOICES, STYLE_CHOICES, Product
+from Stores.models import Store, Product
 
 
 class StoreSerializer(serializers.ModelSerializer):
@@ -11,5 +11,5 @@ class StoreSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'quantity' , 'store']
+        fields = ['id', 'name', 'description', 'price', 'quantity' , 'store','image']
 
