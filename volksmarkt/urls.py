@@ -24,7 +24,6 @@ urlpatterns = [
     path('Stores/',include('Stores.urls')),
     path('Shopping/',include('Orders.urls')),
     path('Products/',include('Products.urls')),
-
     path('token/', 
           jwt_views.TokenObtainPairView.as_view(), 
           name ='token_obtain_pair'),
