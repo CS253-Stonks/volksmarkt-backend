@@ -11,16 +11,6 @@ Categories = [('Electronics' , 'Electronics'),
               ('food' , 'food'),
               ('Others' , 'Others')]
 
-Categories = [('Electronics' , 'Electronics'),
-              ('Medical' , 'Medical'),
-              ('Stationary' , 'Stationary'),
-              ('Print' , 'Print'),
-              ('General Store' , 'General Store'),
-              ('grocery', 'grocery'),
-              ('books', 'books'),
-              ('food' , 'food'),
-              ('Others' , 'Others')]
-
 # Create your models here.
 class Store(models.Model):
     name = models.CharField(max_length=100)
