@@ -6,9 +6,9 @@ User = get_user_model()
 class BuyerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name']
+        fields = ['id', 'email', 'address']
 
 class SellerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'company_name']
+        fields = ['id', 'email', 'address']
