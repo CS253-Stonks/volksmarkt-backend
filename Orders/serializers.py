@@ -21,12 +21,13 @@ class OrderMiniSerializer(serializers.ModelSerializer):
         fields = ['id', 'buyer', 'total_cost' , 'deliveryaddress' , 'order_date' , 'order_items']
 
 class ProductMiniSerializer(serializers.ModelSerializer):
+    store_name = serializers.CharField(source='store.name' , read_only=True)
     class Meta:
         model = Product
-        fields = ['name', 'price' , 'store' , 'image']
+        fields = ['name', 'price' , 'store_name' , 'image']
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = ProductMiniSerializer()
+    product = ProductMiniSerializer(read_only=True)
     class Meta:
         model = OrderItem
         fields = ['id' , 'product' , 'quantity' , 'order']
