@@ -23,4 +23,11 @@ urlpatterns = [
     path('Cart/<int:pk>/', views.CurrentBuyerCart.as_view(), name='buyer_cart'),
     # path('CartItem/',views.CartItemList.as_view(), name='cart-list'),
     path('CartItem/<int:pk>/',views.CartItemDetail.as_view(), name='cart-detail'),
+    path('PlaceOrder/<int:pk>/',views.PlaceOrder.as_view(), name='place-order'),
+    path('MyOrders/<int:pk>/',views.OrdersList.as_view(), name='orders-list'),
+    path('ViewOrder/<int:pk>/',views.OrderDetail.as_view(), name='orders-detail'),
+    path('ViewOrderItem/<int:pk>/',views.OrderItemDetail.as_view(), name='orderitem-detail'),
 ]
+#list all orders of a buyer
+#retrieve particular order
+#retrieve order item
