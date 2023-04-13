@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from Stores.models import Store,Product
 from Stores.serializers import StoreSerializer,ProductSerializer
 from rest_framework import generics
@@ -19,13 +19,8 @@ class StoreDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StoreSerializer
 
 class StoreWiseProductList(APIView):
-    def get_object(self, pk):
-        try:
-            return Store.objects.get(pk=pk)
-        except Store.DoesNotExist:
-            raise Http404
     def get(self, request, pk, format=None):
-        store = self.get_object(pk)
+        store = get_object_or_404(Store , pk)
         products = store.products
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
@@ -45,3 +40,13 @@ class ProductList(generics.ListCreateAPIView):
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+class CategoryWiseStoreList (APIView):
+    def get(self, request, cat, format=None):
+        try:
+            stores = Store.objects.filter(category=cat)
+        except Store.DoesNotExist:
+            raise Http404
+        serializer = StoreSerializer(stores, many=True)
+        return Response(serializer.data)
