@@ -27,6 +27,7 @@ urlpatterns = [
     path('MyOrders/<int:pk>/',views.OrdersList.as_view(), name='orders-list'),
     path('ViewOrder/<int:pk>/',views.OrderDetail.as_view(), name='orders-detail'),
     path('ViewOrderItem/<int:pk>/',views.OrderItemDetail.as_view(), name='orderitem-detail'),
+    path('MyDeliveries/<int:pk>/',views.SellerOrdersList.as_view(), name='seller-orders-list'),
 ]
 #list all orders of a buyer
 #retrieve particular order

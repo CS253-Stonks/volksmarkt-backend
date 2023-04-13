@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from Stores.models import Store, Product
 from Stores.serializers import ProductSerializer
-from Orders.models import CartItem, Order, OrderItem
+from Orders.models import CartItem, Order, OrderItem, SellerOrder, SellerOrderItem
 
 # class CartSerializer(serializers.ModelSerializer):
 #     cart_items = serializers.PrimaryKeyRelatedField(many=True, read_only = True)
@@ -38,3 +38,14 @@ class OrderFullSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'buyer', 'total_cost' , 'deliveryaddress' , 'order_date' , 'order_items']
 
+class SellerOrderItemSerializer(serializers.ModelSerializer):
+    product = ProductMiniSerializer(read_only=True)
+    class Meta:
+        model = SellerOrderItem
+        fields = ['id' , 'product' , 'quantity' , 'order']
+
+class SellerOrderSerializer(serializers.ModelSerializer):
+    order_items = OrderItemSerializer(many=True)
+    class Meta:
+        model = SellerOrder
+        fields = ['id', 'buyer', 'total_cost' , 'deliveryaddress' , 'order_date' , 'order_items']

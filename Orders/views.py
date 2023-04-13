@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from Orders.models import CartItem, Order, OrderItem
+from Orders.models import CartItem, Order, OrderItem, SellerOrder, SellerOrderItem
+from Stores.models import Store
 from accounts.models import Buyer
-from Orders.serializers import CartItemSerializer, OrderMiniSerializer, OrderFullSerializer, OrderItemSerializer
+from Orders.serializers import CartItemSerializer, OrderMiniSerializer, OrderFullSerializer, OrderItemSerializer, SellerOrderSerializer
 from rest_framework import generics
 from django.core.mail import send_mail
 from django.http import Http404
@@ -72,21 +73,36 @@ class PlaceOrder(APIView):
         data = request.data
         data.update({'buyer':pk})
         serializer = OrderMiniSerializer(data=data)
+
         if serializer.is_valid():
             serializer.save()
             order = Order.objects.get(id=serializer.data['id'])
-            for item in buyer.cart_items.all():                
-                OrderItem.objects.create(product=item.product , order=order , quantity=item.quantity)
-                item.delete()
+
+            while buyer.cart_items.all():
+                store = buyer.cart_items.first().product.store
+                seller_order = SellerOrder.objects.create(store=store, buyer=buyer, deliveryaddress=order.deliveryaddress )
+                cost = 0
+                for item in buyer.cart_items.filter(product__store = store): 
+                    prod = item.product
+                    cost += prod.price * item.quantity   
+                    newstock = prod.quantity - item.quantity            
+                    OrderItem.objects.create(product=prod , order=order , quantity=item.quantity)
+                    SellerOrderItem.objects.create(product=prod , order=seller_order , quantity=item.quantity)
+                    prod.quantity = newstock
+                    prod.save()
+                    item.delete()
+                seller_order.total_cost = cost
+                seller_order.save()
+
             serializer = OrderMiniSerializer(order)
-            email_body = "Your order details are: " + serializer.data;
-            email = buyer.email
-            send_mail(
-            "Welcome to Volksmarkt",
-            email_body,
-            "volksmarkt.iitk@gmail.com",
-            [email],
-            fail_silently=False,)
+            # email_body = "Your order details are: " + serializer.data;
+            # email = buyer.email
+            # send_mail(
+            # "Welcome to Volksmarkt",
+            # email_body,
+            # "volksmarkt.iitk@gmail.com",
+            # [email],
+            # fail_silently=False,)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -110,4 +126,11 @@ class OrderItemDetail(APIView):
     def get(self, request, pk , format=None):
         item = get_object_or_404(OrderItem , pk=pk)
         serializer = OrderItemSerializer(item)
+        return Response(serializer.data)
+    
+class SellerOrdersList(APIView):
+    def get(self, request, pk , format=None):
+        store = get_object_or_404(Store , pk=pk)
+        orders = store.orders
+        serializer = SellerOrderSerializer(orders, many=True)
         return Response(serializer.data)
