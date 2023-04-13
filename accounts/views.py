@@ -56,8 +56,11 @@ def buyer_register(request):
             'isCreated':True,
             'buyerId': buyer.pk
         }
-        email_body = "Dear " + first_name + " " + last_name + "\n" + "You have been successfully registered!\n Regards, \n Team volksmarkt"
-        
+        email_body = f'''Dear {first_name}
+You have been successfully registered!
+Regards, 
+Team volksmarkt.
+'''
         send_mail(
         "Welcome to Volksmarkt",
         email_body,
