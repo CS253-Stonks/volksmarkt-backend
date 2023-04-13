@@ -49,8 +49,11 @@ class CurrentBuyerCart(APIView):
     def get(self, request, pk , format=None):
         buyer = self.get_object(pk)
         items = buyer.cart_items
+        cost = 0
+        for item in items.all():
+            cost += item.product.price * item.quantity
         serializer = CartItemSerializer(items, many=True)
-        return Response(serializer.data)
+        return Response({'items':serializer.data , 'cost':cost})
     
     def post(self, request, pk, format=None):
         buyer = self.get_object(pk)
