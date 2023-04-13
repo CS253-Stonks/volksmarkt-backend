@@ -4,7 +4,7 @@ from Orders.models import CartItem, Order, OrderItem
 from accounts.models import Buyer
 from Orders.serializers import CartItemSerializer, OrderMiniSerializer, OrderFullSerializer, OrderItemSerializer
 from rest_framework import generics
-
+from django.core.mail import send_mail
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -76,6 +76,14 @@ class PlaceOrder(APIView):
                 OrderItem.objects.create(product=item.product , order=order , quantity=item.quantity)
                 item.delete()
             serializer = OrderMiniSerializer(order)
+            email_body = "Your order details are: " + serializer.data;
+            email = buyer.email
+            send_mail(
+            "Welcome to Volksmarkt",
+            email_body,
+            "volksmarkt.iitk@gmail.com",
+            [email],
+            fail_silently=False,)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -1,8 +1,14 @@
-from django.test import TestCase
-from .models import Store, Product
-# Create your tests here.
+import json
+from rest_framework import status
+from django.test import TestCase, Client
+from django.urls import reverse
+from .models import Product,Store
+from .serializers import ProductSerializer,StoreSerializer
 
-class ProductTest(TestCase):
+from django.test import TestCase
+
+
+class test_get_all_products(TestCase):
     def setUp(self):
         Store.objects.create(name="Test Shop",
                             address = "Test Address",
@@ -16,9 +22,9 @@ class ProductTest(TestCase):
         description = "Test description 2",
         price = 10,
         store = Store.objects.get(name = "Test Shop"))
-    def test_product_price(self):
-        product1 = Product.objects.get(name = "Test Product")
-        product2 = Product.objects.get(name = "Test Product 2")
-        self.assertEqual(product1.price,0)
-        self.assertEqual(product2.price,10)
-    
+        self.client = Client()
+    def test_all_products(self):
+        response = self.client.get(reverse('productlist'))
+        productList = Product.objects.all()
+        serializer = ProductSerializer(productList, many=True)
+        self.assertEqual(response.data, serializer.data)

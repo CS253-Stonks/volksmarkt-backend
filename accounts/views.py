@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from .models import Buyer
+from django.core.mail import send_mail
 
 class HomeView(APIView):
      
@@ -22,7 +23,8 @@ def buyer_login(request):
     if user:
         msg = {
             'isAuthenticated':True,
-            'user':user.get_username()
+            'user':user.get_username(),
+            'id':user.buyer_id.pk
         }
     else:
         msg = {
@@ -54,6 +56,15 @@ def buyer_register(request):
             'isCreated':True,
             'buyerId': buyer.pk
         }
+        email_body = "Dear " + first_name + " " + last_name + "\n" + "You have been successfully registered!\n Regards, \n Team volksmarkt"
+        
+        send_mail(
+        "Welcome to Volksmarkt",
+        email_body,
+        "volksmarkt.iitk@gmail.com",
+        [email],
+        fail_silently=False,
+    )
     except Exception as exception :
         msg = {
             'isCreated':False,
