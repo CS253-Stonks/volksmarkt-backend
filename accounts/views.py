@@ -23,7 +23,9 @@ def buyer_login(request):
     if user:
         msg = {
             'isAuthenticated':True,
-            'user':user.get_username(),
+            'username':user.get_username(),
+            'firstName': user.first_name,
+            'lastName': user.last_name,
             'id':user.buyer_id.pk
         }
     else:
@@ -39,7 +41,7 @@ def buyer_register(request):
     email = request.POST.get('email')
     password = request.POST.get('password')
     address = request.POST.get('address')
-    username = str(email).split('@')[0]
+    username = str(email)
     try:
         user = User.objects.create_user(
             first_name=first_name,
