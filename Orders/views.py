@@ -77,11 +77,6 @@ class PlaceOrder(APIView):
         if serializer.is_valid():
             serializer.save()
             order = Order.objects.get(id=serializer.data['id'])
-            order_string = f'''Hi {buyer.first_name}
-Here are your order details:
-Order ID: {serializer.data['id']}
-Order Time: {datetime.datetime.now().strftime("%I:%M%p %B %d, %Y")}
-'''
             while buyer.cart_items.all():
                 store = buyer.cart_items.first().product.store
                 seller_order = SellerOrder.objects.create(store=store, buyer=buyer, deliveryaddress=order.deliveryaddress )
@@ -95,19 +90,9 @@ Order Time: {datetime.datetime.now().strftime("%I:%M%p %B %d, %Y")}
                     prod.quantity = newstock
                     prod.save()
                     item.delete()
-                    order_string +=f"Name:{prod.name} Quantity:{item.quantity} Store:{prod.store.name}\n"
                 seller_order.total_cost = cost
-                order_string += f"Total cost: Rs.{cost}"
                 seller_order.save()
             serializer = OrderMiniSerializer(order)
-            email_body = "<div>Your order details are:<div>" + order_string;
-            email = buyer.email
-            send_mail(
-            "Order Details",
-            email_body,
-            "volksmarkt.iitk@gmail.com",
-            [email],
-            fail_silently=False,)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
