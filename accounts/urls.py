@@ -6,6 +6,8 @@ urlpatterns = [
      path('home/', views.HomeView.as_view(), name ='home'),
      path('buyer/login/',views.buyer_login,name='buyer_login'),
      path('buyer/register/',views.buyer_register,name='buyer_register'),
+     path('seller/login/',views.seller_login,name='seller_login'),
+     path('seller/register/',views.seller_register,name='seller_register'),
      re_path(r'^api/v1/', include('djoser.urls')),
      re_path(r'^api/v1/', include('djoser.urls.authtoken')),
 ]

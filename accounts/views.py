@@ -5,7 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .models import Buyer
+from .models import Buyer,Seller
+from Stores.models import Store
 from django.core.mail import send_mail
 
 class HomeView(APIView):
@@ -59,7 +60,7 @@ def buyer_register(request):
             'buyerId': buyer.pk
         }
         email_body = f'''Dear {first_name}
-You have been successfully registered!
+You have been successfully registered as a buyer!
 Regards, 
 Team volksmarkt.
 '''
@@ -74,5 +75,78 @@ Team volksmarkt.
         msg = {
             'isCreated':False,
             'msg':f"Failed to create Buyer due to ${exception}"
+        }
+    return JsonResponse(msg)
+
+@csrf_exempt
+def seller_login(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user = authenticate(username=username,password=password)
+    if user:
+        msg = {
+            'isAuthenticated':True,
+            'username':user.get_username(),
+            'firstName': user.first_name,
+            'lastName': user.last_name,
+            'id':user.seller_id.pk,
+            'shop_id': user.seller_id.store.pk,
+        }
+    else:
+        msg = {
+            'isAuthenticated':False
+        }
+    return JsonResponse(msg)
+
+@csrf_exempt
+def seller_register(request):
+    first_name = request.POST.get('first_name')
+    last_name = request.POST.get('last_name')
+    shop_name = request.POST.get('shop_name')
+    contact = request.POST.get('contact')
+    category = request.POST.get('category')
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    address = request.POST.get('address')
+    username = str(email)
+    try:
+        user = User.objects.create_user(
+            first_name=first_name,
+            last_name=last_name,
+            email = email,
+            username = username,
+            password = password
+        )
+        store = Store.objects.create(
+            name = shop_name,
+            address = address,  
+            category  = category,
+            contact = contact
+        )
+        seller = Seller.objects.create(
+            user = user,
+            address = address,
+            store = store
+        )
+        msg = {
+            'isCreated':True,
+            'sellerId': seller.pk
+        }
+        email_body = f'''Dear {first_name}
+You have been successfully registered as a seller!
+Regards, 
+Team volksmarkt.
+'''
+        send_mail(
+        "Welcome to Volksmarkt",
+        email_body,
+        "volksmarkt.iitk@gmail.com",
+        [email],
+        fail_silently=False,
+    )
+    except Exception as exception :
+        msg = {
+            'isCreated':False,
+            'msg':f"Failed to create Seller due to ${exception}"
         }
     return JsonResponse(msg)

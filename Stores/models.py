@@ -6,9 +6,9 @@ Categories = [('Electronics' , 'Electronics'),
               ('Stationary' , 'Stationary'),
               ('Print' , 'Print'),
               ('General Store' , 'General Store'),
-              ('grocery', 'grocery'),
-              ('books', 'books'),
-              ('food' , 'food'),
+              ('Grocery', 'Grocery'),
+              ('Books', 'Books'),
+              ('Food' , 'Food'),
               ('Others' , 'Others')]
 
 # Create your models here.
