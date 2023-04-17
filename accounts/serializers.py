@@ -1,17 +1,25 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from .models import Buyer, Seller
 
 User = get_user_model()
 
 class BuyerSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username' )
+    firstName = serializers.CharField(source='user.first_name' )
+    lastName = serializers.CharField(source='user.last_name' )
     class Meta:
-        model = User
-        fields = ['id', 'email', 'address']
+        model = Buyer
+        fields = ['username', 'firstName', 'lastName' , 'wallet']
 
 class SellerSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username' )
+    firstName = serializers.CharField(source='user.first_name' )
+    lastName = serializers.CharField(source='user.last_name' )
+    store = serializers.CharField(source='store.name' )
     class Meta:
-        model = User
-        fields = ['id', 'email', 'address']
+        model = Seller
+        fields = ['username', 'firstName', 'lastName' , 'wallet' , 'store']
         
 from django.contrib.auth import authenticate
 from djoser.conf import settings
