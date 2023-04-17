@@ -95,7 +95,6 @@ def seller_login(request):
             'lastName': user.last_name,
             'id':user.seller_id.pk,
             'shop_id': user.seller_id.store.pk,
-            'shop_image': user.seller_id.store.image,
             'wallet': user.seller_id.wallet
         }
     else:
