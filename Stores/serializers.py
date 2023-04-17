@@ -6,7 +6,7 @@ class StoreSerializer(serializers.ModelSerializer):
     products = serializers.PrimaryKeyRelatedField(many=True, read_only = True)#removed queryset=Product.objects.all()
     class Meta:
         model = Store
-        fields = ['id', 'name', 'category' , 'address', 'contact','products']
+        fields = ['id', 'name', 'category' , 'address', 'contact','products','image']
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
