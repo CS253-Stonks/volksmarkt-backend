@@ -91,6 +91,7 @@ def seller_login(request):
             'lastName': user.last_name,
             'id':user.seller_id.pk,
             'shop_id': user.seller_id.store.pk,
+            'shop_image': user.seller_id.store.image,
         }
     else:
         msg = {
@@ -108,6 +109,7 @@ def seller_register(request):
     email = request.POST.get('email')
     password = request.POST.get('password')
     address = request.POST.get('address')
+    image = request.FILES['image']
     username = str(email)
     try:
         user = User.objects.create_user(
@@ -121,7 +123,8 @@ def seller_register(request):
             name = shop_name,
             address = address,  
             category  = category,
-            contact = contact
+            contact = contact,
+            image = image
         )
         seller = Seller.objects.create(
             user = user,
