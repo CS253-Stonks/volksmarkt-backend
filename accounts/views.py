@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from .models import Buyer,Seller
 from Stores.models import Store
 from django.core.mail import send_mail
+from django.http import Http404
 
 class HomeView(APIView):
      
@@ -27,7 +28,8 @@ def buyer_login(request):
             'username':user.get_username(),
             'firstName': user.first_name,
             'lastName': user.last_name,
-            'id':user.buyer_id.pk
+            'id':user.buyer_id.pk,
+            'wallet': user.buyer_id.wallet
         }
     else:
         msg = {
@@ -92,6 +94,7 @@ def seller_login(request):
             'id':user.seller_id.pk,
             'shop_id': user.seller_id.store.pk,
             'shop_image': user.seller_id.store.image,
+            'wallet': user.seller_id.wallet
         }
     else:
         msg = {
@@ -153,3 +156,38 @@ Team volksmarkt.
             'msg':f"Failed to create Seller due to ${exception}"
         }
     return JsonResponse(msg)
+
+
+class buyer_details(APIView):
+    def get_object(self, pk):
+        try:
+            return Buyer.objects.get(pk=pk)
+        except Buyer.DoesNotExist:
+            raise Http404
+    def get(self, request, pk , format=None):
+        buyer = self.get_object(pk)
+        msg = {
+            'username': buyer.user.get_username(),
+            'firstName': buyer.user.first_name,
+            'lastName': buyer.user.last_name,
+            'wallet': buyer.wallet
+        }
+        return JsonResponse(msg)
+    
+
+class seller_details(APIView):
+    def get_object(self, pk):
+        try:
+            return Seller.objects.get(pk=pk)
+        except Seller.DoesNotExist:
+            raise Http404
+    def get(self, request, pk , format=None):
+        seller = self.get_object(pk)
+        msg = {
+            'username': seller.user.get_username(),
+            'firstName': seller.user.first_name,
+            'lastName': seller.user.last_name,
+            'wallet': seller.wallet,
+            'store': seller.store.name
+        }
+        return JsonResponse(msg)

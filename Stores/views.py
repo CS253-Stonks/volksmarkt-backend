@@ -19,8 +19,14 @@ class StoreDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StoreSerializer
 
 class StoreWiseProductList(APIView):
+    def get_object(self, pk):
+        try:
+            return Store.objects.get(pk=pk)
+        except Store.DoesNotExist:
+            raise Http404
+        
     def get(self, request, pk, format=None):
-        store = get_object_or_404(Store , pk)
+        store = self.get_object(pk)
         products = store.products
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
