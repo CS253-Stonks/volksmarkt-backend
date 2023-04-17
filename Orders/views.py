@@ -62,8 +62,17 @@ class CurrentBuyerCart(APIView):
         data.update({'buyer':buyer.pk})
         serializer = CartItemSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            prod_id = data['product']
+            same_items = buyer.cart_items.filter(product_id=prod_id)
+            if same_items:
+                same_item = same_items.first()
+                same_item.quantity = same_item.quantity + data['quantity']
+                same_item.save()
+                serializer = CartItemSerializer(same_item)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 class PlaceOrder(APIView):        
