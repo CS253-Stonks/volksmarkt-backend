@@ -80,6 +80,8 @@ class PlaceOrder(APIView):
         buyer = get_object_or_404(Buyer , pk=pk)
         # cartitems = buyer.cart_items
         data = request.data
+        if buyer.wallet < data['total_cost']:
+            return Response({"msg": "Not enough funds"})
         data.update({'buyer':pk})
         serializer = OrderMiniSerializer(data=data)
 
@@ -101,6 +103,12 @@ class PlaceOrder(APIView):
                     item.delete()
                 seller_order.total_cost = cost
                 seller_order.save()
+                seller = store.seller
+                seller.wallet = seller.wallet + cost
+                seller.save()
+            
+            buyer.wallet = buyer.wallet - data['total_cost']
+            buyer.save()
             serializer = OrderMiniSerializer(order)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
