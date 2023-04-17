@@ -9,6 +9,8 @@ from .models import Buyer,Seller
 from Stores.models import Store
 from django.core.mail import send_mail
 from django.http import Http404
+from .serializers import BuyerSerializer, SellerSerializer
+from rest_framework import status
 
 class HomeView(APIView):
      
@@ -163,13 +165,16 @@ class buyer_details(APIView):
             raise Http404
     def get(self, request, pk , format=None):
         buyer = self.get_object(pk)
-        msg = {
-            'username': buyer.user.get_username(),
-            'firstName': buyer.user.first_name,
-            'lastName': buyer.user.last_name,
-            'wallet': buyer.wallet
-        }
-        return JsonResponse(msg)
+        serializer = BuyerSerializer(buyer)
+        return Response(serializer.data)
+    
+    def patch(self , request , pk , format=None):
+        buyer = self.get_object(pk)
+        serializer = BuyerSerializer(buyer, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class seller_details(APIView):
@@ -180,11 +185,13 @@ class seller_details(APIView):
             raise Http404
     def get(self, request, pk , format=None):
         seller = self.get_object(pk)
-        msg = {
-            'username': seller.user.get_username(),
-            'firstName': seller.user.first_name,
-            'lastName': seller.user.last_name,
-            'wallet': seller.wallet,
-            'store': seller.store.name
-        }
-        return JsonResponse(msg)
+        serializer = SellerSerializer(seller)
+        return Response(serializer.data)
+    
+    def patch(self , request , pk , format=None):
+        seller = self.get_object(pk)
+        serializer = SellerSerializer(seller, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
